@@ -2,7 +2,7 @@
 
 Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Available as an express/connect middleware and as a reverse proxy.
 
-Based on :zap: [Lightning Charge](https://github.com/ElementsProject/lightning-charge).
+Powered by :zap: [Lightning Charge](https://github.com/ElementsProject/lightning-charge).
 
 ## Install
 

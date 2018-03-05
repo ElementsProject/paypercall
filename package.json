@@ -13,7 +13,9 @@
   "keywords": [
     "bitcoin",
     "lightning",
-    "pay per call"
+    "lightning-charge",
+    "pay-per-call",
+    "micropayments"
   ],
   "author": "Nadav Ivgi",
   "license": "MIT",
