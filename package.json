@@ -1,0 +1,36 @@
+{
+  "name": "paypercall",
+  "version": "0.0.1",
+  "description": "A reverse proxy that charges on a pay-per-call basis with Lightning payments",
+  "main": "dist/paypercall.js",
+  "bin": "dist/reverse-proxy.js",
+  "scripts": {
+    "start": "babel-node src/reverse-proxy.js",
+    "dist": "babel -d dist src",
+    "prepublishOnly": "npm run dist"
+  },
+  "repository": "https://github.com/shesek/paypercall.git",
+  "keywords": [
+    "bitcoin",
+    "lightning",
+    "pay per call"
+  ],
+  "author": "Nadav Ivgi",
+  "license": "MIT",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "express": "^4.16.2",
+    "http-proxy": "^1.16.2",
+    "js-yaml": "^3.10.0",
+    "knex": "^0.14.4",
+    "lightning-charge-client": "^0.1.7",
+    "morgan": "^1.9.0",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
