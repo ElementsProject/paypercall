@@ -1,7 +1,7 @@
 {
   "name": "paypercall",
   "version": "0.1.0",
-  "description": "A reverse proxy that charges on a pay-per-call basis with Lightning payments",
+  "description": "Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning",
   "main": "dist/paypercall.js",
   "bin": "dist/reverse-proxy.js",
   "scripts": {
