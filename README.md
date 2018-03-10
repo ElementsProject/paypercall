@@ -153,6 +153,7 @@ app.post('/ocr/:type', (req, res, next) => {
   pay(getPriceForType(req.params.type))(req, res, (err) => {
     if (err) return next(err)
     // payment succesfull, run OCR
+    // (the paid invoice is accessible at `req.invoice`)
   })
 })
 ```
