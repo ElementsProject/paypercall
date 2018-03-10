@@ -43,7 +43,7 @@ module.exports = opt => {
       if (!await markSpent(inv)) return res.status(410).send('Error: payment token already spent')
 
       res.once('finish', async _ => await markDone(inv, res))
-      req.invoice = invoice
+      req.invoice = inv
       next()
     } else {
       const inv = await charge.invoice({
