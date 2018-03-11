@@ -48,7 +48,7 @@ module.exports = opt => {
     } else {
       const inv = await charge.invoice({
         amount, currency
-      , metadata: { app: 'paypercall', req: only(req, 'method', 'path') }
+      , metadata: { source: 'paypercall', req: only(req, 'method', 'path') }
       , description: `Pay to call ${req.method} ${req.path}`
       , expiry: invoiceExp
       })
