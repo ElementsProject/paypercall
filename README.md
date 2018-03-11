@@ -15,7 +15,7 @@ $ npm install paypercall
 ### As a middleware
 
 `paypercall` can be used as an express/connect middleware to charge payments directly in your node.js app.
-Below is an example app that charges 0.1 EUR to send out tweets:
+Below is an example app that charges 0.1 USD to send out tweets:
 
 #### app.js
 ```js
@@ -32,6 +32,8 @@ app.post('/tweet', pay(0.1, 'USD'), (req, res, next) =>
 
 app.listen(4000, _ => console.log('HTTP server running on localhost:4000'))
 ```
+
+See [`ifpaytt`](https://github.com/shesek/ifpaytt) for a more full-fledged application using `paypercall` as a middleware.
 
 ### As a reverse proxy
 
