@@ -3,9 +3,9 @@
   "version": "0.1.2",
   "description": "Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning",
   "main": "dist/paypercall.js",
-  "bin": "dist/reverse-proxy.js",
+  "bin": "dist/cli.js",
   "scripts": {
-    "start": "babel-node src/reverse-proxy.js",
+    "start": "babel-node src/cli.js",
     "dist": "babel -d dist src",
     "prepublishOnly": "npm run dist"
   },
@@ -26,6 +26,7 @@
     "js-yaml": "^3.10.0",
     "knex": "^0.14.4",
     "lightning-charge-client": "^0.1.7",
+    "meow": "^4.0.0",
     "morgan": "^1.9.0",
     "sqlite3": "^3.1.13"
   },

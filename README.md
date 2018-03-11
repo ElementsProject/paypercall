@@ -10,13 +10,14 @@ Powered by :zap: [Lightning Charge](https://github.com/ElementsProject/lightning
 $ npm install paypercall
 ```
 
-## Getting Started
+## Server Setup
 
 ### As a middleware
 
 `paypercall` can be used as an express/connect middleware to charge payments directly in your node.js app.
 Below is an example app that charges 0.1 EUR to send out tweets:
 
+#### app.js
 ```js
 const pay = require('paypercall')({ chargeUrl: ..., chargeToken: ... })
     , twt = require('twitter')({ consumer_key: ..., consumer_secret: ..., ... })
@@ -24,7 +25,7 @@ const pay = require('paypercall')({ chargeUrl: ..., chargeToken: ... })
 
 app.use(require('body-parser').urlencoded())
 
-app.post('/tweet', pay(0.1, 'EUR'), (req, res, next) =>
+app.post('/tweet', pay(0.1, 'USD'), (req, res, next) =>
   twt.post('statuses/update', { status: req.body.message })
     .then(tweet => res.send(tweet))
     .catch(next))
@@ -40,12 +41,11 @@ An example with a python app:
 
 #### app.py
 ```python
-import twitter
 from flask import Flask, request
-
-twt = twitter.Api(consumer_key=..., consumer_secret=..., ...)
+import twitter
 
 app = Flask(__name__)
+twt = twitter.Api(consumer_key=..., consumer_secret=..., ...)
 
 @app.route("/tweet", methods=['POST'])
 def tweet():
@@ -54,25 +54,15 @@ def tweet():
 @app.run(Port=4001)
 ```
 
-#### paypercall.yaml
-```yaml
-chargeUrl: http://localhost:9112
-chargeToken: mySecretToken
+Run the python app and the `paypercall` proxy:
 
-port: 4000
-upstreamUrl: http://localhost:4001
-
-endpoints:
-  POST /tweet: 0.1 EUR
-```
-
-#### run
 ```bash
 $ FLASK_APP=app.py flask run
 * Running on http://localhost:4001/
 
-$ paypercall paypercall.yaml
-HTTP server running on localhost:4000
+$ paypercall --charge-token mySecretToken --upstream-url http://localhost:4001 \
+             --port 4000 --rates-yaml '{ POST /tweet: 0.1 USD }'
+HTTP reverse proxy running on http://localhost:4000, proxying to http://localhost:4001
 ```
 
 You will now have the python app running on port 4001 (providing API calls free of charge)
@@ -125,7 +115,7 @@ Returns a new payment middleware factory. `options` can contain the following fi
 - `chargeToken`: Lightning Charge access token (**required**)
 - `dbPath`: Path to sqlite database (optional, defaults to `./paypercall.db`)
 - `currency`: Default currency if none is specified (optional, defaults to `BTC`)
-- `secret`: Secret key to use for token generation (optional, generated based on `chargeToken` by default)
+- `secret`: Secret key used for HMAC tokens (optional, generated based on `chargeToken` by default)
 - `invoiceExp`: How long should invoices be payable for (optional, defaults to 1 hour)
 - `accessExp`: How long should paid access tokens remain valid for (optional, defaults to 1 hour)
 
@@ -161,17 +151,37 @@ app.post('/ocr/:type', (req, res, next) => {
 ### Reverse proxy
 
 ```bash
-$ paypercall ./path/to/config.yaml
+$ paypercall --help
+
+  Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning
+
+  Usage
+    $ paypercall [options]
+
+  Options
+    -c, --charge-url <url>      lightning charge server url [default: http://localhost:9112]
+    -t, --charge-token <token>  lightning charge access token [required]
+
+    -u, --upstream-url <url>    the upstream server to reverse proxy [required]
+    -r, --rates-path <path>     path to YAML file mapping from endpoints to rates [default: ./rates.yaml]
+    -y, --rates-yaml <yaml>     YAML string to use instead of reading from {rates-path}
+    -x, --currency <name>       default rate currency if none is specified [default: BTC]
+    -d, --db-path <path>        path to store sqlite database [default: ./payperclick.db]
+
+    --invoice-expiry <sec>      how long should invoices be payable for [default: 1 hour]
+    --access-expiry <sec>       how long should paid access tokens remain valid for [default: 1 hour]
+    --token-secret <secret>     secret key used for HMAC tokens [default: generated based on {charge-token}]
+
+    -p, --port <port>           http server port [default: 4000]
+    -i, --host <host>           http server listen address [default: 127.0.0.1]
+    -e, --node-env <env>        nodejs environment mode [default: production]
+    -h, --help                  output usage information
+    -v, --version               output version number
+
+  Example
+    $ payperclick -t myAccessToken -u http://upstream-server.com/ \
+                  -y '{ POST /tweet: 0.0001 BTC, PUT /page/:id: 0.0002 BTC }'
 ```
-
-The YAML configuration file can contain the same options as above,
-plus the following:
-
-- `upstreamUrl`: the upstream server to reverse-proxy (**required**)
-- `endpoints`: an object where the key is `[method] [path]` (e.g. `POST /tweet`)
-  and the value is the cost-per-call (e.g. `0.5 USD`, or simply `0.5` to use the default currency) (**required**)
-- `port`: the port the reverse proxy should listen on (optional, defaults to `4000`)
-- `host`: the address the reverse proxy should listen on (optional, defaults to `127.0.0.1`)
 
 ## License
 MIT
