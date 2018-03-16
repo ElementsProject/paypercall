@@ -1,5 +1,8 @@
 # paypercall
 
+[![npm release](https://img.shields.io/npm/v/paypercall.svg)](https://www.npmjs.com/package/paypercall)
+[![MIT license](https://img.shields.io/github/license/shesek/paypercall.svg)](https://github.com/shesek/paypercall/blob/master/LICENSE)
+
 Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Available as an express/connect middleware and as a reverse proxy.
 
 Powered by :zap: [Lightning Charge](https://github.com/ElementsProject/lightning-charge).
