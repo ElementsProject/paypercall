@@ -24,7 +24,7 @@
     "knex": "^0.14.4",
     "lightning-charge-client": "^0.1.7",
     "on-finished": "^2.3.0",
-    "sqlite3": "^3.1.13"
+    "sqlite3": "^4.0.0"
   },
   "optionalDependencies": {
     "express": "^4.16.2",
