@@ -3,7 +3,7 @@
 [![npm release](https://img.shields.io/npm/v/paypercall.svg)](https://www.npmjs.com/package/paypercall)
 [![MIT license](https://img.shields.io/github/license/shesek/paypercall.svg)](https://github.com/shesek/paypercall/blob/master/LICENSE)
 
-Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Available as an express/connect middleware and as a reverse proxy.
+Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Available as an express middleware and as a reverse proxy.
 
 Powered by :zap: [Lightning Charge](https://github.com/ElementsProject/lightning-charge).
 
@@ -17,7 +17,7 @@ $ npm install paypercall
 
 ### As a middleware
 
-`paypercall` can be used as an express/connect middleware to charge payments directly in your node.js app.
+`paypercall` can be used as an express middleware to charge payments directly in your node.js apps.
 Below is an example app that charges 0.1 USD to send out tweets:
 
 #### app.js
@@ -128,7 +128,7 @@ Returns a new payment middleware factory. `options` can contain the following fi
 const payware = pay(amount[, currency])
 ```
 
-Returns an express/connect middleware that requires a payment of `amount` units of `currency`
+Returns an express middleware that requires a payment of `amount` units of `currency`
 (or the default currency if none provided) before letting requests pass through.
 
 Can be used as following:
