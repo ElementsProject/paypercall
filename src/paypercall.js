@@ -1,5 +1,6 @@
-import { createHmac } from 'crypto'
-import { join } from 'path'
+import { createHmac }       from 'crypto'
+import { join }             from 'path'
+import onFinished           from 'on-finished'
 import { pwrap, only, now } from './util'
 
 require('babel-polyfill')
@@ -42,7 +43,7 @@ module.exports = opt => {
     if (paid) {
       if (!await markSpent(inv)) return res.status(410).send('Error: payment token already spent')
 
-      res.once('finish', async _ => await markDone(inv, res))
+      onFinished(res, async _ => await markDone(inv, res))
       req.invoice = inv
       next()
     } else {
