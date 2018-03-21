@@ -3,7 +3,7 @@
 [![npm release](https://img.shields.io/npm/v/paypercall.svg)](https://www.npmjs.com/package/paypercall)
 [![MIT license](https://img.shields.io/github/license/shesek/paypercall.svg)](https://github.com/shesek/paypercall/blob/master/LICENSE)
 
-Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Available as an express middleware and as a reverse proxy.
+Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Want to require payment when users take some programmatic action, such as sending a tweet or running imaging processing? That's what `paypercall    allows. It's available as an express middleware (where a node.js app makes charges directly) or as a reverse proxy (where a reverse proxy requires payment before providing access to an app).
 
 Powered by :zap: [Lightning Charge](https://github.com/ElementsProject/lightning-charge).
 
@@ -42,7 +42,7 @@ See [`ifpaytt`](https://github.com/shesek/ifpaytt) for a more full-fledged appli
 
 Alternatively, you can develop your HTTP server with no payments awareness
 and use `paypercall` as a reverse proxy to handle payments.
-An example with a python app:
+Below is an example using a python app:
 
 #### app.py
 ```python
@@ -75,7 +75,9 @@ and the `paypercall` reverse proxy running on port 4000 (charging on a per-call 
 
 ## Paying for API calls
 
-1. Send an empty request (no body) to the resource to get the BOLT11 payment request and the `X-Token` header:
+A user can access the `paypercall`-enabled function in three steps.
+
+1. Send an empty request (no body) to the `paypercall`-enabled resource to get the BOLT11 payment request and the `X-Token` header:
 
     ```bash
     $ curl -i -X POST http://localhost:4000/tweet
