@@ -2,6 +2,8 @@
 
 [![npm release](https://img.shields.io/npm/v/paypercall.svg)](https://www.npmjs.com/package/paypercall)
 [![MIT license](https://img.shields.io/github/license/shesek/paypercall.svg)](https://github.com/shesek/paypercall/blob/master/LICENSE)
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=lightning-charge)
 
 Charge for HTTP APIs on a pay-per-call basis with Bitcoin and Lightning. Available as an express middleware and as a reverse proxy.
 
