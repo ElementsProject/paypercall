@@ -26,7 +26,7 @@ const args = require('meow')(`
 
     Example
       $ payperclick -t myAccessToken -u http://upstream-server.com/ \\
-                    -y '{ POST /tweet: 0.0001 BTC, PUT /page/:id: 0.0002 BTC }'
+                    -y '{ POST /sms: 0.0001 BTC, PUT /page/:id: 0.0002 BTC }'
 
 `, { flags: { chargeUrl: {alias:'c'}, chargeToken: {alias:'t'}
             , upstreamUrl: {alias:'u'}, ratesPath: {alias:'r'}, ratesYaml: {alias:'y'}

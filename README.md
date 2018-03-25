@@ -26,19 +26,19 @@ $ npm install paypercall
 ### As a middleware
 
 `paypercall` can be used as an express middleware to charge payments directly in your node.js apps.
-Below is an example app that charges 0.1 USD to send out tweets:
+Below is an example app that charges 0.1 USD to send SMS messages:
 
 #### app.js
 ```js
 const pay = require('paypercall')({ chargeUrl: ..., chargeToken: ... })
-    , twt = require('twitter')({ consumer_key: ..., consumer_secret: ..., ... })
+    , twi = require('twilio')(twilioSid, twilioToken)
     , app = require('express')()
 
 app.use(require('body-parser').urlencoded())
 
-app.post('/tweet', pay(0.1, 'USD'), (req, res, next) =>
-  twt.post('statuses/update', { status: req.body.message })
-    .then(tweet => res.send(tweet))
+app.post('/sms', pay(0.1, 'USD'), (req, res, next) =>
+  twi.messages.create({ from: 'paypercall', to: req.body.to, body: req.body.message })
+    .then(msg => res.send({ success: true, sid: msg.sid }))
     .catch(next))
 
 app.listen(4000, _ => console.log('HTTP server running on localhost:4000'))
@@ -53,14 +53,15 @@ Below is an example using a python app:
 #### app.py
 ```python
 from flask import Flask, request
-import twitter
+from twilio.rest import Client as Twilio
 
 app = Flask(__name__)
-twt = twitter.Api(consumer_key=..., consumer_secret=..., ...)
+twi = Twilio(twilioSid, twilioToken)
 
-@app.route("/tweet", methods=['POST'])
-def tweet():
-    return twt.PostUpdate(request.form['message'])
+@app.route("/sms", methods=['POST'])
+def sms():
+  msg = twi.messages.create(from='paypercall', to=request.form['to'], body=request.form['message'])
+  return { 'success': True, 'sid': msg.sid }
 
 @app.run(Port=4001)
 ```
@@ -72,7 +73,7 @@ $ FLASK_APP=app.py flask run
 * Running on http://localhost:4001/
 
 $ paypercall --charge-token mySecretToken --upstream-url http://localhost:4001 \
-             --port 4000 --rates-yaml '{ POST /tweet: 0.1 USD }'
+             --port 4000 --rates-yaml '{ POST /sms: 0.1 USD }'
 HTTP reverse proxy running on http://localhost:4000, proxying to http://localhost:4001
 ```
 
@@ -86,7 +87,7 @@ Users can access `paypercall`-enabled API endpoints in three steps:
 1. Send an empty request (no body) to the `paypercall`-enabled endpoint to get the BOLT11 payment request and the `X-Token` header:
 
     ```bash
-    $ curl -i -X POST http://localhost:4000/tweet
+    $ curl -i -X POST http://localhost:4000/sms
 
     HTTP/1.1 402 Payment Required
     Content-Type: application/vnd.lightning.bolt11
@@ -104,14 +105,15 @@ Users can access `paypercall`-enabled API endpoints in three steps:
 3. Send the request again, this time with the request body and with the `X-Token` header echoed back:
 
     ```bash
-    $ curl -i -X POST http://localhost:4000/tweet \
+    $ curl -i -X POST http://localhost:4000/sms \
       -H 'X-Token: lmbdmJeoSQ0ZCB5egtnph.af1eupleFBVuhN2vrbRuDLTlsnnUPYRzDWdL5HtWykY' \
-      -d message='I got lightning working and all I got was this tweet'
+      -t to=+972-789456123 \
+      -d message='I got lightning working and all I got was this sms!'
 
     HTTP/1.1 200 OK
     Content-Type: application/json
 
-    {"id_str":"123123123","text":"I got lightning working...",...}
+    {"success":true,"sid":"SMf34fe622a8fe7565fc15be3ce8bc437e"}
     ```
 
 ## Documentation
@@ -193,7 +195,7 @@ $ paypercall --help
 
   Example
     $ payperclick -t myAccessToken -u http://upstream-server.com/ \
-                  -y '{ POST /tweet: 0.0001 BTC, PUT /page/:id: 0.0002 BTC }'
+                  -y '{ POST /sms: 0.0001 BTC, PUT /page/:id: 0.0002 BTC }'
 ```
 
 ## License
