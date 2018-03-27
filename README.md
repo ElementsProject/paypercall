@@ -44,6 +44,8 @@ app.post('/sms', pay(0.1, 'USD'), (req, res, next) =>
 app.listen(4000, _ => console.log('HTTP server running on localhost:4000'))
 ```
 
+See [`ifpaytt`](https://github.com/shesek/ifpaytt) for a more full-fledged application using `paypercall` as a middleware.
+
 ### As a reverse proxy
 
 Alternatively, you can develop your HTTP server with no payments awareness
