@@ -21,7 +21,7 @@ module.exports = opt => {
     .digest().toString('base64').replace(/\W+/g, '')
 
   const makeToken  = (req, invid) => [ invid, hmac(req, invid) ].join('.')
-  const parseToken = (req, t=req.get('X-Token').split('.')) => hmac(req, t[0]) === t[1] && t[0]
+  const parseToken = (req, t=(req.get('X-Token') || req.query['X-Token']).split('.')) => hmac(req, t[0]) === t[1] && t[0]
 
   // Database
   const markSpent = inv        => db('spent').insert({ status: 'processing', invid: inv.id, paid_at: inv.paid_at }).catch(err => false)
@@ -36,7 +36,7 @@ module.exports = opt => {
 
   // Middleware
   return (amount, currency=defCurrency) => pwrap(async (req, res, next) => {
-    const invid = req.get('X-Token') && parseToken(req)
+    const invid = (req.get('X-Token') || req.query['X-Token']) && parseToken(req)
         , inv   = invid && await charge.fetch(invid)
         , paid  = inv && inv.status === 'paid' && inv.paid_at > now() - accessExp
 
@@ -54,10 +54,12 @@ module.exports = opt => {
       , expiry: invoiceExp
       })
 
-      res.status(402) // Payment Required
-         .type('application/vnd.lightning.bolt11')
-         .set('X-Token', makeToken(req, inv.id))
-         .send(inv.payreq)
+      const xToken = makeToken(req, inv.id)
+      const response = {"invoice": inv.payreq, "X-Token-Header": xToken}
+      res.status(302) // (Found; Payment required for this route. Note: 402/Lightning MIME doesn't load in Chrome.)
+         .type('application/json')
+         .set('X-Token', xToken)
+         .send(response)
     }
   })
 }
